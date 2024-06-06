@@ -7,12 +7,11 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [userID, setUserID] = useState(null);
   const [loading, setLoading] = useState(true);
-
   useEffect(() => {
     const loadUser = async () => {
       const userData = await AsyncStorage.getItem('user');
       if (userData) {
-        setUserID(JSON.parse(userData).user.UserID);
+        setUserID(JSON.parse(userData).userId);
       }
       setLoading(false);
     };
@@ -21,12 +20,10 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (Email, Password) => {
     try {
-      const response = await axiosInstance.post('/login', { Email, Password });
-      console.log(response)
+      const response = await axiosInstance.post('/login', { Email:Email, Password:Password });
       if (response.status === 200) {
         const user = response.data;
-        console.log(user)
-        setUserID(user.UserID);
+        setUserID(user.userId);
         await AsyncStorage.setItem('user', JSON.stringify(user));
         return { success: true };
       }
@@ -42,7 +39,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ UserID, loading, login, logout }}>
+    <AuthContext.Provider value={{ userID, loading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

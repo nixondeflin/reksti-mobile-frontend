@@ -9,6 +9,7 @@ import ProfileScreen from './pages/ProfileScreen';
 import LoginScreen from './pages/LoginScreen';
 import SignupScreen from './pages/SignupScreen';
 import UnderDev from './pages/UnderDev';
+import EditProfile from './pages/EditProfile';
 
 const Stack = createNativeStackNavigator();
 
@@ -33,7 +34,6 @@ const AppStack = () => (
 
 const RootNavigator = () => {
   const { userID, loading } = useAuth();
-
   if (loading) {
     // You can return a loading indicator here if needed
     return null;

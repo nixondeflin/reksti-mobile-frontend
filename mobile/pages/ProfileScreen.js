@@ -11,19 +11,19 @@ import { useAuth } from '../Contexts/AuthenticationContext';
 const ProfileScreen = () => {
     const navigation = useNavigation();
 
-    const { allCards, calculateTotalCards, calculateFollowings, calculateFollowers, getCard } = useSocial();
-    const { profiles, getProfilesByUserID } = useProfile();
-    const{userID:UserID} = useAuth()
-    const [profile, setProfile] = useState(null);
-    const [cards, setCards] = useState([]);
-    useEffect(() => {
-        setProfile(profiles.find(profile => profile.UserID === UserID) || null);
-        setCards(getCard(UserID));
-    }, [profiles, allCards]);
+    // const { allCards, calculateTotalCards, calculateFollowings, calculateFollowers, getCard } = useSocial();
+    // const { profiles, getProfilesByUserID } = useProfile();
+    // const{userID:UserID} = useAuth()
+    // const [profile, setProfile] = useState(null);
+    // const [cards, setCards] = useState([]);
+    // useEffect(() => {
+    //     setProfile(profiles.find(profile => profile.UserID === UserID) || null);
+    //     setCards(getCard(UserID));
+    // }, [profiles, allCards]);
     return (
         <View style={styles.containerScreen}>
-
-            <View style={styles.container}>
+            <Text>a</Text>
+            {/* <View style={styles.container}>
                 <View style={styles.imageView}>
                     <ImageBackground source={require('../assets/backgroung.png')} style={styles.background}>
                         <Image source={require('../assets/rei.jpeg')} style={styles.profileImage} />
@@ -40,15 +40,15 @@ const ProfileScreen = () => {
                     )}
                     <View style={styles.profileNumber}>
                         <View>
-                            <Text style={[styles.textCenter, styles.bold]}>{calculateFollowers(UserID)}</Text>
+                            <Text style={[styles.textCenter, styles.bold]}>aa</Text>
                             <Text style={styles.textCenter}>Followers</Text>
                         </View>
                         <View>
-                            <Text style={[styles.textCenter, styles.bold]}>{calculateTotalCards(UserID)}</Text>
+                            <Text style={[styles.textCenter, styles.bold]}>aa</Text>
                             <Text style={styles.textCenter}>Card</Text>
                         </View>
                         <View>
-                            <Text style={[styles.textCenter, styles.bold]}>{calculateFollowings(UserID)}</Text>
+                            <Text style={[styles.textCenter, styles.bold]}>aa</Text>
                             <Text style={styles.textCenter}>Following</Text>
                         </View>
                     </View>
@@ -71,7 +71,7 @@ const ProfileScreen = () => {
 
                 </ScrollView>
 
-            </View>
+            </View> */}
             <Navigation />
         </View>
     );

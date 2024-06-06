@@ -1,23 +1,23 @@
-import { Image, Pressable, StyleSheet, View } from 'react-native';
+import { Image, Pressable, StyleSheet, View,Text } from 'react-native';
 import { useNavigation, useNavigationState } from '@react-navigation/native';
 import React from 'react';
 
 const Navigation = () => {
   const navigation = useNavigation();
   const routeName = useNavigationState(state => state.routes[state.index].name);
-
   return (
     <View style={styles.containerImage}>
       <Pressable onPress={() => navigation.navigate('Home')}>
         <Image
-          source={require('../assets/icon/home.png')}
+          source={require('../assets/rei.jpeg')}
           style={[
             styles.icon,
             routeName === 'Home' && styles.activeIcon,
           ]}
         />
+        <Image source={require('../assets/rei.jpeg')}/>
       </Pressable>
-      <Pressable onPress={() => navigation.navigate('Search')}>
+      {/* <Pressable onPress={() => navigation.navigate('Search')}>
         <Image
           source={require('../assets/icon/search.png')}
           style={[
@@ -25,19 +25,9 @@ const Navigation = () => {
             routeName === 'Search' && styles.activeIcon,
           ]}
         />
-      </Pressable>
-      <Pressable onPress={() => navigation.navigate('Create')}>
-        <View style={[
-          styles.plusIconContainer,
-          routeName === 'Create' && styles.activePlusIconContainer,
-        ]}>
-          <Image
-            source={require('../assets/icon/plus.png')}
-            style={styles.plusIcon}
-          />
-        </View>
-      </Pressable>
+      </Pressable> */}
       <Pressable onPress={() => navigation.navigate('Settings')}>
+        <Text>a</Text>
         <Image
           source={require('../assets/icon/settings.png')}
           style={[

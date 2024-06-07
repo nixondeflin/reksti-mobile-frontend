@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, Pressable, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Pressable, TouchableOpacity, Alert, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import axiosInstance from '../utility/axiosInstance';
 
@@ -9,6 +9,9 @@ const SignupScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [nama, setNama] = useState('');
+  const [alamat, setAlamat] = useState('');
+  const [nomorTelepon, setNomorTelepon] = useState('');
   const [passwordVisible, setPasswordVisible] = useState(false);
 
   const handleSignup = async () => {
@@ -18,11 +21,12 @@ const SignupScreen = () => {
     }
 
     try {
-      const response = await axiosInstance.post('/signup', {
-        username,
-        email,
-        password,
-        userType: 'basic' 
+      const response = await axiosInstance.post('/users', {
+        Email: email,
+        Password: password,
+        Nama: nama,
+        Alamat: alamat,
+        NomorTelepon: nomorTelepon
       });
 
       if (response.status === 201) {
@@ -37,10 +41,10 @@ const SignupScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>Sign Up</Text>
 
-      <Text style={styles.label}>Name :</Text>
+      <Text style={styles.label}>Username :</Text>
       <TextInput
         style={styles.input}
         placeholder="John Doe"
@@ -56,6 +60,31 @@ const SignupScreen = () => {
         onChangeText={setEmail}
         keyboardType="email-address"
         autoCapitalize="none"
+      />
+
+      <Text style={styles.label}>Nama :</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Nama Lengkap"
+        value={nama}
+        onChangeText={setNama}
+      />
+
+      <Text style={styles.label}>Alamat :</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Alamat"
+        value={alamat}
+        onChangeText={setAlamat}
+      />
+
+      <Text style={styles.label}>Nomor Telepon :</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Nomor Telepon"
+        value={nomorTelepon}
+        onChangeText={setNomorTelepon}
+        keyboardType="phone-pad"
       />
 
       <Text style={styles.label}>Password :</Text>
@@ -99,13 +128,13 @@ const SignupScreen = () => {
       <Pressable style={styles.signupButton} onPress={handleSignup}>
         <Text style={styles.signupButtonText}>Sign Up</Text>
       </Pressable>
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     backgroundColor: '#233881',
     justifyContent: 'center',
     alignItems: 'center',
@@ -158,6 +187,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#000',
     borderRadius: 10,
     alignItems: 'center',
+    marginBottom: 20, // Added marginBottom to avoid overlapping with other elements
   },
   signupButtonText: {
     color: '#fff',

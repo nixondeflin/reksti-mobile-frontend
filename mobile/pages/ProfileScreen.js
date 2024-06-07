@@ -1,101 +1,101 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, Image, StyleSheet, ImageBackground, Pressable, ScrollView } from 'react-native';
+import { Text, View, Image, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
 import Navigation from '../components/Navigation';
-import { useNavigation } from '@react-navigation/native';
-import Button1 from '../components/Button1';
-import TextValue from '../components/TextValue';
-import { useProfile } from '../Contexts/ProfileContext';
-import { useSocial } from '../Contexts/SocialContext';
 import { useAuth } from '../Contexts/AuthenticationContext';
+import axiosInstance from '../utility/axiosInstance'; // Make sure this path is correct
 
 const ProfileScreen = () => {
-    const navigation = useNavigation();
+    const { userID } = useAuth();
+    const [profile, setProfile] = useState(null);
+    const [cardID, setCardID] = useState(null);
+    const [emergencyID, setEmergencyID] = useState(null);
+    const [loading, setLoading] = useState(true);
 
-    // const { allCards, calculateTotalCards, calculateFollowings, calculateFollowers, getCard } = useSocial();
-    // const { profiles, getProfilesByUserID } = useProfile();
-    // const{userID:UserID} = useAuth()
-    // const [profile, setProfile] = useState(null);
-    // const [cards, setCards] = useState([]);
-    // useEffect(() => {
-    //     setProfile(profiles.find(profile => profile.UserID === UserID) || null);
-    //     setCards(getCard(UserID));
-    // }, [profiles, allCards]);
+    useEffect(() => {
+        const fetchProfile = async () => {
+            try {
+                const [userResponse, cardResponse, emergencyResponse] = await Promise.all([
+                    axiosInstance.get(`/users/${userID}`),
+                    axiosInstance.get('/cards'),
+                    axiosInstance.get('/emergencies'),
+                ]);
+
+                setProfile(userResponse.data);
+
+                const userCard = cardResponse.data.find(card => card.UserID === userID);
+                const userEmergency = emergencyResponse.data.find(emergency => emergency.UserID === userID);
+
+                if (userCard) {
+                    setCardID(userCard.CardID);
+                }
+
+                if (userEmergency) {
+                    setEmergencyID(userEmergency.EmergencyID);
+                }
+            } catch (error) {
+                console.error('Failed to fetch data:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchProfile();
+    }, [userID]);
+
+    if (loading) {
+        return (
+            <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large" color="#0000ff" />
+            </View>
+        );
+    }
+
     return (
         <View style={styles.containerScreen}>
-            <Text>a</Text>
-            {/* <View style={styles.container}>
-                <View style={styles.imageView}>
-                    <ImageBackground source={require('../assets/backgroung.png')} style={styles.background}>
-                        <Image source={require('../assets/rei.jpeg')} style={styles.profileImage} />
-                    </ImageBackground>
-                </View>
-                <View style={styles.descView}>
-                    {profile && (
-                        <View>
-                            <Text style={[styles.textCenter, styles.bold]}>{profile.Name}</Text>
-                            <Text style={styles.textCenter}>💼 {profile.Job}</Text>
-                            <Text style={styles.textCenter}>📍 {profile.Location}</Text>
-                            <Text style={styles.textCenter}>🌐 {profile.SocialMedia}</Text>
+            <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+                <Text style={styles.title}>Data Penghuni</Text>
+                {profile && (
+                    <>
+                        <View style={styles.imageContainer}>
+                            <Image source={require('../assets/rei.jpeg')} style={styles.profileImage} />
                         </View>
-                    )}
-                    <View style={styles.profileNumber}>
-                        <View>
-                            <Text style={[styles.textCenter, styles.bold]}>aa</Text>
-                            <Text style={styles.textCenter}>Followers</Text>
+                        <View style={styles.infoContainer}>
+                            <Text style={styles.label}>Nama :</Text>
+                            <Text style={styles.value}>{profile.Nama}</Text>
+                            <Text style={styles.label}>Contact :</Text>
+                            <Text style={styles.value}>{profile.NomorTelepon}</Text>
+                            <Text style={styles.label}>Address :</Text>
+                            <Text style={styles.value}>{profile.Alamat}</Text>
+                            <Text style={styles.label}>Card ID :</Text>
+                            <Text style={styles.value}>{cardID || 'N/A'}</Text>
+                            <Text style={styles.label}>Emergency ID :</Text>
+                            <Text style={styles.value}>{emergencyID || 'N/A'}</Text>
                         </View>
-                        <View>
-                            <Text style={[styles.textCenter, styles.bold]}>aa</Text>
-                            <Text style={styles.textCenter}>Card</Text>
-                        </View>
-                        <View>
-                            <Text style={[styles.textCenter, styles.bold]}>aa</Text>
-                            <Text style={styles.textCenter}>Following</Text>
-                        </View>
-                    </View>
-                    <View style={[styles.flexrow, { gap: 15 }]}>
-                        <Button1 text="Edit Profile" backgroundColor="#ffffff" color='#008edb' onPress={() => navigation.navigate('EditProfile')} />
-                        <Button1 text="User Card" onPress={() => navigation.navigate('AllCard', { cards, isUserCard: true })} />
-                    </View>
-                </View>
-                 <ScrollView>
-                 <View style={styles.cardView}>
-                    <View style={styles.padding}>
-                        {profile && (
-                            <View style={styles.overviewContainer}>
-                                <Text style={styles.overviewHeader}>Overview</Text>
-                                <Text style={styles.overviewText}>{profile.Overview}</Text>
-                            </View>
-                        )}
-                    </View>
-                </View>
-
-                </ScrollView>
-
-            </View> */}
+                    </>
+                )}
+            </ScrollView>
             <Navigation />
         </View>
     );
-}
+};
 
 const styles = StyleSheet.create({
     containerScreen: {
-        height: '100%',
+        flex: 1,
         backgroundColor: 'white',
     },
-    padding: {
-        paddingLeft: 10,
-        paddingRight: 10,
-    },
-    flexrow: {
-        display: 'flex',
-        flexDirection: 'row',
-    },
-    container: {
-        // flex: 1,
-        justifyContent: 'start',
+    scrollViewContainer: {
+        padding: 20,
         alignItems: 'center',
-        // width: '100%',
-        height: '100%',
+    },
+    title: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        marginBottom: 20,
+    },
+    imageContainer: {
+        marginBottom: 20,
     },
     profileImage: {
         width: 155,
@@ -103,64 +103,25 @@ const styles = StyleSheet.create({
         borderRadius: 150,
         borderWidth: 3,
         borderColor: "white",
-        alignItems: 'center',
-        marginTop: 70,
     },
-    background: {
-        flex: 1,
-        resizeMode: 'contain',
-        alignItems: 'center',
-        marginBottom: -50,
-    },
-    imageView: {
-        height: '30%',
+    infoContainer: {
         width: '100%',
-        // flexDirection: 'row',
-        justifyContent: 'center',
     },
-    descView: {
-        flexDirection: 'column',
-        justifyContent: 'center',
-        // height: '30%',
-        // display:'flex',
-        marginTop: 80,
-    },
-    cardView: {
-        // height: '30%',
-        // flex: 1,
-        justifyContent: 'center',
-        marginTop:20,
-        marginBottom: 100,
-    },
-    profileNumber: {
-        flexDirection: 'row',
-        gap: 15,
-        padding: 20,
-        justifyContent: 'space-around',
-    },
-    bold: {
+    label: {
+        fontSize: 16,
         fontWeight: 'bold',
+        color: 'black',
+        marginTop: 10,
     },
-    textCenter: {
-        textAlign: 'center',
-    },
-    overviewContainer: {
-        paddingHorizontal: 10,
-        marginTop: 20, // Add margin top to create space between buttons and overview
-    },
-    overviewHeader: {
-        fontWeight: 'bold',
-        fontSize: 24,
-        textAlign: 'center',
+    value: {
+        fontSize: 16,
+        color: '#004aad',
         marginBottom: 10,
     },
-    overviewText: {
-        textAlign: 'justify',
-        // fontSize: 30,
-    },
-    icon: {
-        width: 24,
-        height: 24,
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 });
 

@@ -20,7 +20,7 @@ const SettingsScreen = () => {
 
   return (
     <View style={styles.containerScreen}>
-      <ScrollView style={styles.container}>
+      <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.title}>Settings</Text>
 
         <View style={styles.section}>
@@ -90,13 +90,13 @@ const SettingsScreen = () => {
 
 const styles = StyleSheet.create({
   containerScreen: {
-    height: '100%',
-  },
-  container: {
     flex: 1,
     backgroundColor: '#fff',
-    padding: 20,
-    marginBottom:30,
+  },
+  container: {
+    paddingVertical: 20,
+    paddingHorizontal: 20,
+    paddingBottom: 80, // Added padding to avoid overlapping with the bottom navigation
   },
   title: {
     fontSize: 24,
@@ -110,21 +110,26 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#008EDB',
+    color: '#233881',
     marginBottom: 16,
   },
   item: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 24,
+    paddingVertical: 12,
+    paddingHorizontal: 10,
+    borderRadius: 10,
+    backgroundColor: '#f0f0f0',
+    marginBottom: 12,
   },
   icon: {
     marginRight: 10,
+    color: '#555',
   },
   itemText: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: 'black',
+    color: '#333',
   },
 });
 

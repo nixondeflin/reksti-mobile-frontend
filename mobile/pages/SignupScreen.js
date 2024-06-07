@@ -146,6 +146,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     marginBottom: 30,
     alignSelf: 'flex-start', // Align text to the left
+    marginTop:60,
   },
   label: {
     alignSelf: 'flex-start',

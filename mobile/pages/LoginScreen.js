@@ -28,7 +28,7 @@ const LoginScreen = () => {
       <Text style={styles.title}>Welcome!</Text>
       <View style={styles.subtitleContainer}>
         <Text style={styles.subtitle}>Starts your new journey</Text>
-        <Text style={[styles.subtitle, styles.bold]}>with DigiPuro!</Text>
+        <Text style={[styles.subtitle, styles.bold]}>with Rumahku!</Text>
       </View>
 
       <Text style={styles.label}>Email :</Text>

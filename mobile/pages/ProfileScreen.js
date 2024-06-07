@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, Image, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
+import { Text, View, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
 import Navigation from '../components/Navigation';
 import { useAuth } from '../Contexts/AuthenticationContext';
 import axiosInstance from '../utility/axiosInstance'; // Make sure this path is correct
@@ -57,7 +58,7 @@ const ProfileScreen = () => {
                 {profile && (
                     <>
                         <View style={styles.imageContainer}>
-                            <Image source={require('../assets/rei.jpeg')} style={styles.profileImage} />
+                            <Icon name="person-circle-outline" size={155} color="#000" style={styles.profileIcon} />
                         </View>
                         <View style={styles.infoContainer}>
                             <Text style={styles.label}>Nama :</Text>
@@ -93,16 +94,15 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         textAlign: 'center',
         marginBottom: 20,
+        marginTop: 40,
     },
     imageContainer: {
         marginBottom: 20,
     },
-    profileImage: {
+    profileIcon: {
         width: 155,
         height: 155,
         borderRadius: 150,
-        borderWidth: 3,
-        borderColor: "white",
     },
     infoContainer: {
         width: '100%',

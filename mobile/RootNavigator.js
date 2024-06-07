@@ -10,6 +10,7 @@ import LoginScreen from './pages/LoginScreen';
 import SignupScreen from './pages/SignupScreen';
 import UnderDev from './pages/UnderDev';
 import EditProfile from './pages/EditProfile';
+import EmergencyScreen from './pages/EmergencyScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -29,6 +30,7 @@ const AppStack = () => (
     <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }}/>
     <Stack.Screen name="SignUp" component={SignupScreen} options={{ headerShown: false }}/>
     <Stack.Screen name="UnderDev" component={UnderDev} options={{ headerShown: false }}/>
+    <Stack.Screen name="Emergency" component={EmergencyScreen} options={{ headerShown: false }}/>
   </Stack.Navigator>
 );
 

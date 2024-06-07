@@ -20,13 +20,13 @@ const Navigation = () => {
         />
       </Pressable>
 
-      <Pressable onPress={() => navigation.navigate('Notifications')}>
+      <Pressable onPress={() => navigation.navigate('Emergency')}>
         <Icon
           name="notifications-outline" // Icon name for Notifications
           size={30}
           style={[
             styles.icon,
-            routeName === 'Notifications' ? styles.activeIcon : styles.inactiveIcon,
+            routeName === 'Emergency' ? styles.activeIcon : styles.inactiveIcon,
           ]}
         />
       </Pressable>

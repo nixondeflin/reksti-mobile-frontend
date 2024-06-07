@@ -103,6 +103,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 20,
+    marginTop: 40,
   },
   section: {
     marginBottom: 24,

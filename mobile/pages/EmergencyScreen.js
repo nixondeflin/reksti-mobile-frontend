@@ -1,30 +1,27 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Animated, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Navigation from '../components/Navigation';
+import axiosInstance from '../utility/axiosInstance'; // Make sure the path is correct
+import { useAuth } from '../Contexts/AuthenticationContext'; // Import useAuth to get userID
 
 const EmergencyScreen = () => {
+  const { userID } = useAuth(); // Get userID from authentication context
   const [isEmergency, setIsEmergency] = useState(false);
-  const [seconds, setSeconds] = useState(0);
-  const [dots, setDots] = useState('');
-  const flashAnimation = useRef(new Animated.Value(0)).current;
+  const [flashAnimation] = useState(new Animated.Value(0));
 
   useEffect(() => {
-    let interval;
+    let timeout;
     if (isEmergency) {
       startFlashing();
-      interval = setInterval(() => {
-        setSeconds(prevSeconds => prevSeconds + 1);
-        setDots(prevDots => (prevDots.length < 3 ? prevDots + '.' : ''));
-      }, 1000);
+      timeout = setTimeout(() => {
+        setIsEmergency(false);
+      }, 5000); // Automatically revert to normal after 5 seconds
     } else {
       stopFlashing();
-      setSeconds(0);
-      setDots('');
-      clearInterval(interval);
     }
 
-    return () => clearInterval(interval);
+    return () => clearTimeout(timeout);
   }, [isEmergency]);
 
   const startFlashing = () => {
@@ -40,7 +37,7 @@ const EmergencyScreen = () => {
           duration: 500,
           useNativeDriver: false,
         }),
-      ]),
+      ])
     ).start();
   };
 
@@ -50,25 +47,15 @@ const EmergencyScreen = () => {
     });
   };
 
-  const handleEmergencyPress = () => {
-    if (isEmergency) {
-      Alert.alert(
-        "End Emergency",
-        "Apakah situasi darurat sudah berakhir?",
-        [
-          {
-            text: "Tidak",
-            style: "cancel",
-          },
-          {
-            text: "Ya",
-            onPress: () => setIsEmergency(false),
-          },
-        ],
-        { cancelable: false }
-      );
-    } else {
-      setIsEmergency(true);
+  const handleEmergencyPress = async () => {
+    setIsEmergency(true);
+    try {
+      const userResponse = await axiosInstance.get(`/users/${userID}`);
+      const user = userResponse.data;
+      await axiosInstance.post('/emergencies', { UserID: userID, emergency: true });
+      console.log('Emergency activated');
+    } catch (error) {
+      console.error('Failed to send emergency request:', error);
     }
   };
 
@@ -84,12 +71,6 @@ const EmergencyScreen = () => {
         <TouchableOpacity style={styles.button} onPress={handleEmergencyPress}>
           <Icon name="alert" size={150} color="#fff" />
         </TouchableOpacity>
-        {isEmergency && (
-          <>
-            <Text style={[styles.callingText, { color: 'black' }]}>Calling{dots}</Text>
-            <Text style={[styles.timerText, { color: 'black' }]}>{new Date(seconds * 1000).toISOString().substr(14, 5)}</Text>
-          </>
-        )}
       </View>
       <Navigation />
     </Animated.View>
@@ -120,16 +101,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 30,
-  },
-  callingText: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginTop: 20,
-  },
-  timerText: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginTop: 10,
   },
 });
 
